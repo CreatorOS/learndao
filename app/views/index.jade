@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  div
+    div.card
+      h2#balance 
+      button#addFunds Add Funds
+      button#addFunds(onClick="window.location.href='/proposeGrant'") Request Grant
+    .card 
+      h2 DAO Policy
+      p#policy
+      button#proposePolicy(onClick="window.location.href='/proposePolicy'") Propose New Policy
+
+
+  script.
+    $(document).ready(async () => {
+      const funds = (await managerContract.getFunds()).toString();
+      const policy = (await managerContract.getPolicy()).toString();
+      $("#balance").html(funds + " LearnTokens");
+      $("#policy").html(policy);
+    }); 

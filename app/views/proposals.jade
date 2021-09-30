@@ -1,0 +1,111 @@
+extends layout
+
+block content
+  .card 
+    h2 Proposals 
+    select#filter
+      option(value="grants") Grants 
+      option(value="policy") Policy Change 
+      option(value="members") Member Change 
+    button(onClick="filter()") Fetch
+  .card#loading 
+    span Loading
+  .results
+  script.
+    $(document).ready(() => {
+        $("#loading").hide();
+    })
+
+    function getStatusFromEnum(index) {
+        switch(index){
+            case 0 : return "Pending";
+            case 1 : return "Waiting";
+            case 2 : return "Approved";
+            case 3 : return "Rejected";
+        }
+    }
+    async function filter() {
+        const selectedFilter = $("#filter").val();
+        $("#loading").show();
+        $(".results").html("")
+        if(selectedFilter === "grants"){
+            const grantsCount = parseInt((await daoContract.getGrantProposalCounter()).toString());
+            for(let i = grantsCount; i >= 0; i--){
+                const grant = await daoContract.getGrantProposalAtIndex(i);
+                if(grant[5] == 0){
+                    const html = `
+                    <div class="card">
+                        <small>Grant Proposal</small>
+                        <h3>${grant[0]}</h4>
+                        <br />
+                        <br />
+                        <div>
+                        ${grant[1]}
+                        </div>
+                        <br />
+                        Amount: TODO
+                        <small></small>
+                        <button onClick="votePolicy(${i}, true)">Vote to approve</button>
+                        <button onClick="votePolicy(${i}, false)">Vote to reject</button>
+                    </div>
+                    `;
+                    $(".results").append(html);
+                }
+                else if(grant[5] == 1){
+                    const html = `
+                    <div class="card">
+                        <small>Disbursement Proposal</small>
+                        <h3>${grant[0]}</h4>
+                        <br />
+                        <br />
+                        <h4>Proposal</h4>
+                        <div>
+                        ${grant[1]}
+                        </div>
+                        <h4>Final</h4>
+                        <div>
+                        ${grant[2]}
+                        </div>
+                        <br />
+                        Amount: TODO
+                        <small></small>
+                        <button onClick="votePolicy(${i}, true)">Vote to approve</button>
+                        <button onClick="votePolicy(${i}, false)">Vote to reject</button>
+                    </div>
+                    `;
+                    $(".results").append(html);
+                }
+
+            }
+        }
+        if(selectedFilter === "policy"){
+            const policyCount = parseInt((await managerContract.getPolicyProposalsCount()).toString());
+            for(let i = policyCount - 1; i >= 0 && i >= policyCount - 20; i --){
+                const policy = await managerContract.getPolicyProposalAtIndex(i);
+                const html = `
+                  <div class="card">
+                    <small>By ${policy[2]}</small>
+                    <br />
+                    <br />
+                    <div>
+                      ${policy[0]}
+                    </div>
+                    <br />
+                    <small></small>
+                    <button onClick="votePolicy(${i}, true)">Vote to approve</button>
+                    <button onClick="votePolicy(${i}, false)">Vote to reject</button>
+                  </div>
+                `;
+                $(".results").append(html);
+            }
+            $("#loading").hide();
+        }
+    }
+
+    async function votePolicy(index, voteUp) {
+        const managerContractWithSigner = managerContract.connect(signer);
+        await managerContractWithSigner.voteOnPolicyChange(index, voteUp);
+    }
+
+    
+    

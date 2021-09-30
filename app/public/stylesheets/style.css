@@ -1,0 +1,20 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color:#9b4dca;
+}
+
+.nav {
+  text-align: center;
+  color: #9b4dca;
+  width: calc(33% - 24px);
+  padding: 12px;
+}
+
+.nav#active {
+  border-bottom: 2px;
+  border-color: #9b4dca;
+}

@@ -1,0 +1,38 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='https://madhavanmalolan.github.io/ecm.js/microgram.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js") 
+    script(src="/javascripts/LearnDao.js") 
+    script(src="/javascripts/LearnDaoManager.js") 
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js") 
+    script.
+      const provider = new ethers.providers.JsonRpcProvider();
+      const signer = provider.getSigner();
+      const daoContract = new ethers.Contract(daoAddress, dao.abi, provider);
+      const managerContract = new ethers.Contract(managerAddress, manager.abi, provider);
+  body
+    div.container
+      h1 Learning DAO
+      button#connect(onClick="connect()") Connect Web3
+      div(style="display: flex; flex-direction: row")
+        a.nav(href="/") Home
+        a.nav(href="/proposals") Proposals
+        a.nav(href="/profile") Profile
+      block content
+    script.
+      $(document).ready(() => {
+        setTimeout(() => {
+          if(window.ethereum.isConnected()) {
+            $("#connect").hide();
+          }
+          else {
+            $("#connect").show();
+          }
+        }, 1000)
+        
+      });
+      function connect() {
+      }

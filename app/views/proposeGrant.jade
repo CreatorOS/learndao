@@ -1,0 +1,34 @@
+extends layout 
+block content 
+  .card 
+    h2 Propose Grant request 
+    a(href="/how-grants-work") Learn how grants work
+    br
+    br
+    input#title(placeholder="Title for your grant proposal")
+    textarea#draft(placeholder="Describe your grant proposal")
+    input#amount(placeholder="Amount Requested in Learn Tokens")
+    input#deadline(placeholder="Deadline yyyy/mm/dd")
+    button#proposeGrantCta(onClick="proposeGrant()") Send Grant Request
+    br
+    br
+    small Once a proposal is sent, it will be open to voting by governors for 7 days
+
+  script.
+    $(document).ready(async () => {
+      
+    })
+    async function proposeGrant() {
+      const daoContractWithSigner = daoContract.connect(signer);
+      $("#proposeGrantCta").attr('disabled', true);
+      try {
+        console.log($("#title").val(), $("#draft").val(), parseInt($("#amount").val(), (new Date($("#deadline").val())).getTime()));
+        await daoContractWithSigner.proposeGrant($("#title").val(), $("#draft").val(), parseInt($("#amount").val()), (new Date($("#deadline").val())).getTime())
+      } catch(e){
+        alert(e);
+      } finally{
+        $("#proposeGrantCta").attr('disabled', false);
+      }
+    }
+
+    

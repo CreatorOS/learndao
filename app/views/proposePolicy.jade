@@ -1,0 +1,29 @@
+extends layout 
+block content 
+  .card 
+    h2 Propose New Policy 
+    textarea#policy(placeholder="Enter new policy")
+    button#proposeCta(onClick="proposePolicy()") Send Proposal
+    br
+    br
+    small Once a proposal is sent, it will be open to voting by governors for 7 days
+
+  script.
+    $(document).ready(async () => {
+        const currentPolicy = await managerContract.getPolicy();
+        $("#policy").val(currentPolicy);
+    })
+
+    async function proposePolicy() {
+      $("#proposeCta").attr('disabled', true);
+      const managerContractWithSigner = managerContract.connect(signer);
+      try {
+        await managerContractWithSigner.proposePolicy($("#policy").val());
+      } catch(e){
+        alert(e);
+      } finally{
+        $("#proposeCta").attr('disabled', false);
+      }
+    }
+
+    
