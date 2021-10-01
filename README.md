@@ -7,11 +7,27 @@ This DAO has been designed with Learning/Education related Grants in mind, howev
 Below are the key elements in this DAO
 
 ## No Coin Based Voting
-Coin based voting has the Futarchy attack that hasn't been solved. Tradable token based voting seems risky and unreliable. 
+Tradable token based voting are prone to attacks.
+An attacker may borrow the said governance token from defi projects like Compound by depositing ETH, cast malicious votes and return the governance tokens to get their ETH back. Thereby, altering decision making of the DAO without any financial exposure. 
 
-Governors in the LearnDAO are voted in or voted out. Each Governor is also assigned a weight to their vote. Not all votes are equal.
+Governors in the LearnDAO are voted in or voted out. Each Governor is also assigned a weight to their vote. Not all votes are equal. 
 
-## Wrapped Tokens
+### Proposals
+There are 4 kinds of proposals 
+- Add, remove or modify governor
+  - e.g. GovernorProposal(address=madhavanmalolan.eth, weight=25)
+- Update DAO policy. Policy defines the rules the governors must use to evaluate proposals.
+  - e.g. PolicyProposal(newPolicy=https://link.com/hash123123)
+- Spend Treasury. The treasury might have various ERC20 tokens that can be transferred out.
+  - e.g. SpendProposal(token=dai.eth, to=madhavanmalolan.eth, value=100)
+- Grant proposals are 2 phase voting processes defined later in this doc
+
+### Execution
+Proposal votings are open for a duration of 7 days. 
+After 7 days, anyone can execute the proposal, if the proposal has 51% votes. 
+Each of the proposal types in the above section can be executed to make the proposals effect on-chain. 
+
+## Wrapped Tokens And Treasury
 The DAO treasury is maintained in a Wrapped Currency. To fund this DAO, one may deposit - say - DAI into the DAO and convert it into LEARN-DAI. 
 
 This forces the grants to ear-mark education funds. The presence of funds that have been earmarked for a particular use will attract more members to come and compete to win the grant. 
@@ -24,7 +40,7 @@ The early grantees who hold on to the wrapped token, can unwrap at a much higher
 
 The cost itself follows a Bancour's curve (todo).
 
-## 2 Phase Grants
+## 2 Phase Grant Proposals
 Every proposal goes through two rounds of voting. 
 
 ### Escrow
